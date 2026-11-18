@@ -1,0 +1,210 @@
+
+<!DOCTYPE html>
+<html lang="ar" dir="rtl">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1">
+<title>مختبر سكراتش الإبداعي</title>
+<style>
+*{box-sizing:border-box}
+body{margin:0;background:#faf5ff;color:#39264b;font-family:Arial,sans-serif}
+header{background:linear-gradient(120deg,#7952a5,#d98ab7);color:white;text-align:center;padding:25px 12px}
+header h1{margin:5px;font-size:27px}
+nav{background:white;padding:12px;display:flex;gap:7px;justify-content:center;flex-wrap:wrap;position:sticky;top:0}
+button{border:0;border-radius:12px;padding:12px 16px;background:#8054a5;color:white;font-size:15px;cursor:pointer}
+nav button{background:#f0e5fa;color:#603d83}
+main{max-width:850px;margin:auto;padding:12px}
+section{display:none;background:white;padding:20px;margin:14px 0;border-radius:18px;box-shadow:0 3px 12px #e5d9ed}
+section.active{display:block}
+h2{color:#8054a5}
+.card{background:#f8f1ff;padding:15px;border-radius:14px;margin:12px 0}
+.stage{height:190px;background:#e8f5ff;border:3px solid #b8d9ed;border-radius:15px;display:flex;align-items:center;justify-content:center;font-size:55px;margin:12px 0}
+#player{transition:.25s}
+.controls{display:flex;justify-content:center;gap:8px;flex-wrap:wrap;margin:12px}
+.maze{display:grid;grid-template-columns:repeat(5, minmax(35px,55px));gap:4px;justify-content:center;margin:18px auto}
+.cell{height:48px;background:#eee0fa;border-radius:7px;display:grid;place-items:center;font-size:25px}
+.wall{background:#76528f}
+input,select{padding:12px;border:1px solid #cdb9df;border-radius:10px;font-size:16px;max-width:100%}
+footer{text-align:center;padding:25px;color:#80618f}
+</style>
+</head>
+<body>
+<header>
+<h1>🌸 مختبر سكراتش الإبداعي 🌸</h1>
+<p>نتعلم البرمجة بالمرح والابتكار</p>
+<p>ابتدائية قديرة | المعلمة: قمراء القحطاني</p>
+</header>
+
+<nav>
+<button onclick="show('home')">الرئيسية</button>
+<button onclick="show('move')">تحدي الحركة</button>
+<button onclick="show('maze')">المتاهة</button>
+<button onclick="show('story')">قصتي التفاعلية</button>
+<button onclick="show('quiz')">اختباري</button>
+</nav>
+
+<main>
+<section id="home" class="active">
+<h2>أهلًا بالمبرمجات الصغيرات 👩🏻‍💻</h2>
+<div class="card">
+مرحبًا بك في مختبر سكراتش! هنا ستتعلمين التفكير المنطقي، وتسلسل الأوامر، وحل المشكلات بطريقة ممتعة.
+</div>
+<h3>ماذا ستكتشفين اليوم؟</h3>
+<ul>
+<li>تحريك الشخصية باستخدام الأوامر.</li>
+<li>حل المتاهة والوصول إلى الكنز.</li>
+<li>إنشاء قصة تفاعلية.</li>
+<li>اختبار معلوماتك البرمجية.</li>
+</ul>
+<button onclick="show('move')">ابدئي المغامرة 🚀</button>
+</section>
+
+<section id="move">
+<h2>🎮 تحدي الحركة</h2>
+<p>اختاري أمرًا وشاهدي الشخصية تتحرك.</p>
+<div class="stage"><span id="player">🐱</span></div>
+<div class="controls">
+<button onclick="move(30)">➡️ يمين</button>
+<button onclick="move(-30)">⬅️ يسار</button>
+<button onclick="jump()">⬆️ قفز</button>
+<button onclick="resetPlayer()">إعادة</button>
+</div>
+<p id="moveMsg">نفذي الأوامر ولاحظي حركة الشخصية.</p>
+</section>
+
+<section id="maze">
+<h2>🧩 تحدي المتاهة</h2>
+<p>ساعدي القطة 🐱 على الوصول إلى الكنز 💎 باستخدام الأسهم.</p>
+<div id="mazeBoard" class="maze"></div>
+<div class="controls">
+<button onclick="mazeMove(-1,0)">⬆️</button>
+<button onclick="mazeMove(0,-1)">⬅️</button>
+<button onclick="mazeMove(1,0)">⬇️</button>
+<button onclick="mazeMove(0,1)">➡️</button>
+</div>
+<p id="mazeMsg">ابدئي من نقطة البداية!</p>
+<button onclick="resetMaze()">إعادة المتاهة</button>
+</section>
+
+<section id="story">
+<h2>📖 قصتي التفاعلية</h2>
+<div class="card">
+<h3>رحلة ريم وجود في عالم التقنية</h3>
+<p id="storyText">في يوم جميل، دخلت ريم وجود إلى مختبر البرمجة. ماذا ستختاران؟</p>
+</div>
+<div class="controls">
+<button onclick="storyChoice(1)">🔍 اكتشاف روبوت</button>
+<button onclick="storyChoice(2)">🚀 رحلة إلى الفضاء</button>
+<button onclick="storyChoice(3)">🌳 إنقاذ الحديقة</button>
+</div>
+<p id="storyEnd"></p>
+<button onclick="resetStory()">ابدئي القصة من جديد</button>
+</section>
+
+<section id="quiz">
+<h2>⭐ اختبري معلوماتك</h2>
+<div class="card">
+<p>1- ما البرنامج المستخدم لتعلم البرمجة باللبنات؟</p>
+<button onclick="answer(this,false)">Word</button>
+<button onclick="answer(this,true)">Scratch</button>
+<button onclick="answer(this,false)">Paint</button>
+<p class="feedback"></p>
+</div>
+<div class="card">
+<p>2- ماذا تعني الخوارزمية؟</p>
+<button onclick="answer(this,true)">خطوات مرتبة لحل مشكلة</button>
+<button onclick="answer(this,false)">صورة ملونة</button>
+<button onclick="answer(this,false)">ملف صوتي</button>
+<p class="feedback"></p>
+</div>
+<div class="card">
+<p>3- ما فائدة تكرار الأوامر؟</p>
+<button onclick="answer(this,false)">حذف المشروع</button>
+<button onclick="answer(this,true)">تنفيذ الأوامر عدة مرات</button>
+<button onclick="answer(this,false)">إغلاق البرنامج</button>
+<p class="feedback"></p>
+</div>
+</section>
+</main>
+
+<footer>إعداد المعلمة قمراء القحطاني 🌷 | ابتدائية قديرة</footer>
+
+<script>
+function show(id){
+document.querySelectorAll('main section').forEach(s=>s.classList.remove('active'));
+document.getElementById(id).classList.add('active');
+}
+
+let playerX=0;
+function move(amount){
+playerX=Math.max(-100,Math.min(100,playerX+amount));
+document.getElementById('player').style.transform=`translateX(${playerX}px)`;
+document.getElementById('moveMsg').textContent='أحسنتِ! نفذتِ أمر الحركة.';
+}
+function jump(){
+let p=document.getElementById('player');
+p.style.transform=`translate(${playerX}px,-45px)`;
+setTimeout(()=>p.style.transform=`translate(${playerX}px,0)`,400);
+}
+function resetPlayer(){
+playerX=0;
+document.getElementById('player').style.transform='translateX(0)';
+document.getElementById('moveMsg').textContent='تمت إعادة الشخصية إلى مكانها.';
+}
+
+const map=[
+[0,0,0,0,0],
+[0,1,1,1,0],
+[0,1,0,1,0],
+[0,1,1,1,0],
+[0,0,0,0,0]
+];
+let r=1,c=1;
+function drawMaze(){
+let board=document.getElementById('mazeBoard');
+board.innerHTML='';
+for(let i=0;i<5;i++){
+for(let j=0;j<5;j++){
+let cell=document.createElement('div');
+cell.className='cell'+(map[i][j]===0?' wall':'');
+if(i===r&&j===c)cell.textContent='🐱';
+else if(i===3&&j===3)cell.textContent='💎';
+board.appendChild(cell);
+}
+}
+}
+function mazeMove(dr,dc){
+let nr=r+dr,nc=c+dc;
+if(nr<0||nr>4||nc<0||nc>4||map[nr][nc]===0)return;
+r=nr;c=nc;
+drawMaze();
+if(r===3&&c===3)document.getElementById('mazeMsg').textContent='🎉 رائع! وصلتِ إلى الكنز!';
+}
+function resetMaze(){
+r=1;c=1;
+document.getElementById('mazeMsg').textContent='ابدئي من نقطة البداية!';
+drawMaze();
+}
+drawMaze();
+
+function storyChoice(n){
+let messages={
+1:'🤖 وجدتا روبوتًا صغيرًا يحتاج إلى البرمجة. تعاونت ريم وجود وكتبتا أوامر الحركة، فبدأ الروبوت يتحرك بسعادة!',
+2:'🚀 انطلقت ريم وجود في رحلة فضائية، وشاهدتا الكواكب والنجوم، واستخدمتا البرمجة للتحكم بالمركبة!',
+3:'🌳 شاهدت ريم وجود حديقة تحتاج إلى العناية، فبرمجتا روبوتًا ليسقي النباتات ويحافظ على جمال الحديقة!'
+};
+document.getElementById('storyText').textContent=messages[n];
+document.getElementById('storyEnd').textContent='النهاية: بالتعاون والإبداع نستطيع حل المشكلات! 🌟';
+}
+function resetStory(){
+document.getElementById('storyText').textContent='في يوم جميل، دخلت ريم وجود إلى مختبر البرمجة. ماذا ستختاران؟';
+document.getElementById('storyEnd').textContent='';
+}
+function answer(btn,correct){
+let feedback=btn.parentElement.querySelector('.feedback');
+feedback.textContent=correct?'✅ إجابة صحيحة، أحسنتِ!':'❌ حاولي مرة أخرى.';
+feedback.style.color=correct?'green':'#c44';
+}
+</script>
+</body>
+</html>
